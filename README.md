@@ -1,10 +1,33 @@
 ---
     Title: TF-serving on keras regression model
 ---
+<!-- TOC -->
 
+- [Background](#background)
+    - [Resourses](#resourses)
+    - [Steps to fulfill](#steps-to-fulfill)
+    - [Bonus](#bonus)
+- [Project Structure](#project-structure)
+- [Quick start unittest](#quick-start-unittest)
+- [Quick start in Kubernetes](#quick-start-in-kubernetes)
+- [Frameworks](#frameworks)
+    - [For serving Tensorflow models](#for-serving-tensorflow-models)
+    - [For exposing our own API](#for-exposing-our-own-api)
+    - [For testing](#for-testing)
+- [Docker image building instruction](#docker-image-building-instruction)
+    - [TF Serving](#tf-serving)
+    - [API server](#api-server)
+- [Docker image usage](#docker-image-usage)
+- [Kubernetes usage](#kubernetes-usage)
+    - [Starting](#starting)
+    - [Verifying](#verifying)
+    - [Stopping](#stopping)
+
+<!-- /TOC -->
 ## Background
 
-### [Model resources](https://www.tensorflow.org/tutorials/keras/regression)
+### Resourses
+[Model resources](https://www.tensorflow.org/tutorials/keras/regression)
 
 ### Steps to fulfill
 - [x] Deploy a trained model in a containerized application(e.g. using TF Server)
