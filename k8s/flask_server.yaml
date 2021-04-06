@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-server
+spec:
+  selector:
+    matchLabels:
+      app: flask-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flask-server
+    spec:
+      containers:
+      - name: flask-server
+        image: flask_server:1.0
+        ports:
+        - containerPort: 5000
+        env:
+          - name: "TF_SERVER"
+            value: "http://tf-serving-service:8501"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: flask-server-service
+  name: flask-server-service
+spec:
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 32000
+  selector:
+    app: flask-server
+  type: NodePort

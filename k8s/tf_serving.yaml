@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tf-serving
+spec:
+  selector:
+    matchLabels:
+      app: tf-serving
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tf-serving
+    spec:
+      containers:
+      - name: tf-serving
+        image: tf_serving:1.0
+        ports:
+        - containerPort: 8501
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: tf-serving-service
+  name: tf-serving-service
+spec:
+  ports:
+  - port: 8501
+    targetPort: 8501
+  selector:
+    app: tf-serving
+  type: ClusterIP
