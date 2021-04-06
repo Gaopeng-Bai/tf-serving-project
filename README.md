@@ -1,25 +1,32 @@
-# TF Serving Project
+---
+    Title: TF-serving on keras regression model
+---
+
 ## Background
+
+### [Model resources](https://www.tensorflow.org/tutorials/keras/regression)
+
 ### Steps to fulfill
 - [x] Deploy a trained model in a containerized application(e.g. using TF Server)
 - [x] Write a Python application that exposes one or several APIS, which consume and then serve predictions from the served model
    - [x] You can use the Python framework of your choice to build the Apl
    - [x] Your application should be fully tested with unit and integration tests. You can use the test framework of your choice o Your application should be containerized
-- [ ] To submit
-   - [ ] Public git repository with deployment instructions
+- [x] To submit
+   - [x] Public git repository with deployment instructions
 ### Bonus
 - [x] You provide Kubernetes manifests which would cover the deployment of the entire applications.
-- [x] You write system tests which demonstrate the performance of your application under load
+- [ ] You write system tests which demonstrate the performance of your application under load
 
 ## Project Structure
 ```bash
-.
 |-- docker #directory that contains Dockerfiles to build docker images
 |   |-- flask.dockerfile
 |   |-- serving.dockerfile
 |-- k8s # directory that contains Kubernetes manifests to deploy both tf_serving and flask_server
 |   |-- flask_server.yaml
 |   |-- tf_serving.yaml
+|-- scripts # directory that contains python script to test the result
+|   |-- test_with_requests.py
 |-- src # project source code
 |   |-- flask_server # flask_server source code
 |   |   |-- __init__.py
@@ -44,6 +51,18 @@
 |-- README.md
 |-- requirements.txt
 ```
+## Quick start unittest
+1. [Run the tf-serving docker containers](#Docker-image-usage)
+2. Run flask app to start the server
+3. [Run unittest](#For-testing)
+
+## Quick start in Kubernetes
+1. [Build the docker containers](#Docker-image-building-instruction)
+2. [Apply the k8s pods](#Kubernetes-usage)
+3. Run python script to test.
+    ```
+    python test_with_requests.py
+    ```
 
 ## Frameworks
 ### For serving Tensorflow models
@@ -171,36 +190,4 @@ Every time I start up our kubernetes cluster, the two will always start up thems
 ```bash
 kubectl delete -f k8s/tf_serving.yaml
 kubectl delete -f k8s/flask_server.yaml
-```
-
-## System test
-```bash
-curl -o /dev/null -s \
-    -w "time_namelookup:  %{time_namelookup}\n
-    time_connect:  %{time_connect}\n
-    time_appconnect:  %{time_appconnect}\n
-    time_pretransfer:  %{time_pretransfer}\n
-    time_redirect:  %{time_redirect}\n
-    time_starttransfer:  %{time_starttransfer}\n
-    ----------\n
-    time_total:  %{time_total}\n" \
-    --location --request POST 'http://localhost:32000/predict' \
-    --header 'Content-Type: application/json' \
-    --data-raw '{"model_name": "dnn_model", "version": "001", "instances": [[10, 8, 2, 1, 23, 3, 1, 3, 1]]}'
-```
-
-```bash
-curl -o /dev/null -s \
-    -w "time_namelookup:  %{time_namelookup}\n
-    time_connect:  %{time_connect}\n
-    time_appconnect:  %{time_appconnect}\n
-    time_pretransfer:  %{time_pretransfer}\n
-    time_redirect:  %{time_redirect}\n
-    time_starttransfer:  %{time_starttransfer}\n
-    ----------\n
-    time_total:  %{time_total}\n" \
-    --location --request POST 'http://localhost:32000/predict_file' \
-    --form 'file=@"example_data.csv"' \
-    --form 'model_name="dnn_model"' \
-    --form 'version="001"'
 ```
